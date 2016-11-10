@@ -1,5 +1,5 @@
 { stdenv, lib, callPackage, perl, fetchurl, python2
-, pkgconfig, spidermonkey_31, boost, icu, libxml2, libpng
+, pkgconfig, spidermonkey_38, boost, icu, libxml2, libpng
 , libjpeg, zlib, curl, libogg, libvorbis, enet, miniupnpc
 , openal, mesa, xproto, libX11, libXcursor, nspr, SDL, SDL2
 , gloox, nvidia-texture-tools
@@ -10,17 +10,17 @@ assert withEditor -> wxGTK != null;
 
 stdenv.mkDerivation rec {
   name = "0ad-${version}";
-  version = "0.0.20";
+  version = "0.0.21";
 
   src = fetchurl {
     url = "http://releases.wildfiregames.com/0ad-${version}-alpha-unix-build.tar.xz";
-    sha256 = "13n61xhjsawda3kl7112la41bqkbqmq4yhr3slydsz856z5xb5m3";
+    sha256 = "11111111l11da3kl7112la41bqkbqmq4yhr3slydsz856z5xb5m3";
   };
 
   nativeBuildInputs = [ python2 perl pkgconfig ];
 
   buildInputs = [
-    spidermonkey_31 boost icu libxml2 libpng libjpeg
+    spidermonkey_38 boost icu libxml2 libpng libjpeg
     zlib curl libogg libvorbis enet miniupnpc openal
     mesa xproto libX11 libXcursor nspr SDL2 gloox
     nvidia-texture-tools
