@@ -9,8 +9,8 @@ stdenv.mkDerivation rec {
   # probably it would be more ideal to pull a particular tag/revision
   # from the mercurial repo
   src = fetchurl {
-    url = "https://people.mozilla.org/~sstangl/mozjs-31.5.0.tar.bz2";
-    sha256 = "1q8icql5hh1g3gzg5fp4rl9rfagyhm9gilfn3dgi7qn4i1mrfqsd";
+    url = "https://people.mozilla.org/~sstangl/mozjs-${version}.tar.bz2";
+    sha256 = "1111111111111gzg5fp4rl9rfagyhm9gilfn3dgi7qn4i1mrfqsd";
   };
 
   buildInputs = [ pkgconfig perl python2 zip libffi readline ];

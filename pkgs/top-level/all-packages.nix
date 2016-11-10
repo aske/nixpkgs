@@ -5654,6 +5654,7 @@ in
   spidermonkey_17 = callPackage ../development/interpreters/spidermonkey/17.0.nix { };
   spidermonkey_24 = callPackage ../development/interpreters/spidermonkey/24.2.nix { };
   spidermonkey_31 = callPackage ../development/interpreters/spidermonkey/31.5.nix { };
+  spidermonkey_38 = callPackage ../development/interpreters/spidermonkey/38.2.nix { };
 
   supercollider = callPackage ../development/interpreters/supercollider {
     fftw = fftwSinglePrec;
