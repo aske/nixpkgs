@@ -1,6 +1,7 @@
 { stdenv, fetchurl, cairo, fontconfig, freetype, gdk_pixbuf, glib
 , glibc, gtk2, libX11, makeWrapper, nspr, nss, pango, unzip, gconf
 , libXi, libXrender, libXext
+, chromium
 }:
 
 # note: there is a i686 version available as well
@@ -19,6 +20,10 @@ stdenv.mkDerivation rec {
   buildInputs = [ unzip makeWrapper ];
 
   unpackPhase = "unzip $src";
+
+  postPatch = ''
+    sed -i "s,/opt/google/chrome,${chromium}/bin,"
+  '';
 
   installPhase = ''
     mkdir -p $out/bin
