@@ -11,6 +11,7 @@
 , gpgme
 , pcre
 , qrencode
+, icu
  }:
 
 stdenv.mkDerivation rec {
@@ -19,8 +20,8 @@ stdenv.mkDerivation rec {
   src = fetchFromGitHub {
     owner = "dino";
     repo = "dino";
-    rev = "680d28360c781ff29e810821801cfaba0493c526";
-    sha256 = "1w08xc842p2nggdxf0dwqw8izhwsrqah10w3s0v1i7dp33yhycln";
+    rev = "cdd4c0b854fd4d27fa1d9bd941df03888301780a";
+    sha256 = "067s0s3z7yv55nydlb8vz66zmrb7rsy95a8n3668a3r9p20mm3ya";
     fetchSubmodules = true;
   };
 
@@ -55,6 +56,7 @@ stdenv.mkDerivation rec {
     at-spi2-core
     dbus
     gettext
+    icu
   ];
 
   enableParallelBuilding = true;
