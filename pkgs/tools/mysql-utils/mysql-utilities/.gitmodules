@@ -1,0 +1,4 @@
+[submodule "internal"]
+	path = internal
+	url = ../mysql-utilities-internal.git
+	branch = master
