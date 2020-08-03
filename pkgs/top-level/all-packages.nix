@@ -7470,6 +7470,7 @@ in
   viu = callPackage ../tools/graphics/viu { };
 
   vnc2flv = callPackage ../tools/video/vnc2flv {};
+  mysql-utils = callPackage ../tools/mysql-utils {};
 
   vncrec = callPackage ../tools/video/vncrec { };
 
