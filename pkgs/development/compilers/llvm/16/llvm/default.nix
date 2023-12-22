@@ -2,7 +2,6 @@
 , pkgsBuildBuild
 , monorepoSrc
 , runCommand
-, fetchpatch
 , cmake
 , darwin
 , ninja

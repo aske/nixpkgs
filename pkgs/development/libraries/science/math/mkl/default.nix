@@ -39,7 +39,7 @@ let
 
   oneapi-mkl-common = fetchurl {
     url = "https://yum.repos.intel.com/oneapi/intel-oneapi-mkl-common-${mklVersion}-${mklVersion}-${rel}.noarch.rpm";
-    hash = "sha256-wztTE2R/IdG6ujGf7KFocpRmXzlZSnEKopTBOlPPlBw";
+    hash = "sha256-wztTE2R/IdG6ujGf7KFocpRmXzlZSnEKopTBOlPPlBw=";
   };
 
   oneapi-mkl-common-devel = fetchurl {

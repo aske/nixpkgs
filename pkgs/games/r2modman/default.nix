@@ -2,7 +2,7 @@
 , stdenv
 , yarn
 , fetchYarnDeps
-, fixup_yarn_lock
+, prefetch-yarn-deps
 , nodejs
 , electron
 , fetchFromGitHub
@@ -14,13 +14,13 @@
 
 stdenv.mkDerivation rec {
   pname = "r2modman";
-  version = "3.1.44";
+  version = "3.1.45";
 
   src = fetchFromGitHub {
     owner = "ebkr";
     repo = "r2modmanPlus";
     rev = "v${version}";
-    hash = "sha256-jiYrJtdM2LPwYDAgoGa0hGJcYNRiAKIuDuKZmSZ7OR4=";
+    hash = "sha256-6o6iPDKKqCzt7H0a64HGTvEvwO6hjRh1Drl8o4x+4ew=";
   };
 
   offlineCache = fetchYarnDeps {
@@ -35,7 +35,7 @@ stdenv.mkDerivation rec {
 
   nativeBuildInputs = [
     yarn
-    fixup_yarn_lock
+    prefetch-yarn-deps
     nodejs
     makeWrapper
     copyDesktopItems
@@ -49,7 +49,7 @@ stdenv.mkDerivation rec {
     export NODE_OPTIONS="--openssl-legacy-provider"
     export HOME=$(mktemp -d)
     yarn config --offline set yarn-offline-mirror $offlineCache
-    fixup_yarn_lock yarn.lock
+    fixup-yarn-lock yarn.lock
     yarn install --offline --frozen-lockfile --ignore-platform --ignore-scripts --no-progress --non-interactive
     patchShebangs node_modules/
 
@@ -83,7 +83,7 @@ stdenv.mkDerivation rec {
       done
     )
 
-    makeWrapper '${electron}/bin/electron' "$out/bin/r2modman" \
+    makeWrapper '${lib.getExe electron}' "$out/bin/r2modman" \
       --inherit-argv0 \
       --add-flags "$out/share/r2modman" \
       --add-flags "\''${NIXOS_OZONE_WL:+\''${WAYLAND_DISPLAY:+--ozone-platform-hint=auto --enable-features=WaylandWindowDecorations}}"
@@ -114,5 +114,6 @@ stdenv.mkDerivation rec {
     license = licenses.mit;
     maintainers = with maintainers; [ aidalgol huantian ];
     inherit (electron.meta) platforms;
+    mainProgram = pname;
   };
 }

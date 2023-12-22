@@ -10,6 +10,7 @@ let
     split
     trace
     typeOf
+    fetchGit
     ;
 
   inherit (lib.attrsets)
@@ -52,8 +53,12 @@ let
     concatStringsSep
     substring
     stringLength
+    hasSuffix
     ;
 
+  inherit (lib.trivial)
+    inPureEvalMode
+    ;
 in
 # Rare case of justified usage of rec:
 # - This file is internal, so the return value doesn't matter, no need to make things overridable
@@ -181,7 +186,8 @@ rec {
           ${context} is of type ${typeOf value}, but it should be a file set or a path instead.''
     else if ! pathExists value then
       throw ''
-        ${context} (${toString value}) is a path that does not exist.''
+        ${context} (${toString value}) is a path that does not exist.
+            To create a file set from a path that may not exist, use `lib.fileset.maybeMissing`.''
     else
       _singleton value;
 
@@ -381,7 +387,7 @@ rec {
 
   # Turn a fileset into a source filter function suitable for `builtins.path`
   # Only directories recursively containing at least one files are recursed into
-  # Type: Path -> fileset -> (String -> String -> Bool)
+  # Type: fileset -> (String -> String -> Bool)
   _toSourceFilter = fileset:
     let
       # Simplify the tree, necessary to make sure all empty directories are null
@@ -753,9 +759,9 @@ rec {
 
       resultingTree =
         _differenceTree
-        positive._internalBase
-        positive._internalTree
-        negativeTreeWithPositiveBase;
+          positive._internalBase
+          positive._internalTree
+          negativeTreeWithPositiveBase;
     in
     # If the first file set is empty, we can never have any files in the result
     if positive._internalIsEmptyWithoutBase then
@@ -796,9 +802,11 @@ rec {
         if
           predicate {
             inherit name type;
+            hasExt = ext: hasSuffix ".${ext}" name;
+
             # To ensure forwards compatibility with more arguments being added in the future,
             # adding an attribute which can't be deconstructed :)
-            "lib.fileset.fileFilter: The predicate function passed as the first argument must be able to handle extra attributes for future compatibility. If you're using `{ name, file }:`, use `{ name, file, ... }:` instead." = null;
+            "lib.fileset.fileFilter: The predicate function passed as the first argument must be able to handle extra attributes for future compatibility. If you're using `{ name, file, hasExt }:`, use `{ name, file, hasExt, ... }:` instead." = null;
           }
         then
           type
@@ -848,4 +856,33 @@ rec {
     in
     _create localPath
       (recurse storePath);
+
+  # Create a file set from the files included in the result of a fetchGit call
+  # Type: String -> String -> Path -> Attrs -> FileSet
+  _fromFetchGit = function: argument: path: extraFetchGitAttrs:
+    let
+      # This imports the files unnecessarily, which currently can't be avoided
+      # because `builtins.fetchGit` is the only function exposing which files are tracked by Git.
+      # With the [lazy trees PR](https://github.com/NixOS/nix/pull/6530),
+      # the unnecessarily import could be avoided.
+      # However a simpler alternative still would be [a builtins.gitLsFiles](https://github.com/NixOS/nix/issues/2944).
+      fetchResult = fetchGit ({
+        url = path;
+      } // extraFetchGitAttrs);
+    in
+    if inPureEvalMode then
+      throw "lib.fileset.${function}: This function is currently not supported in pure evaluation mode, since it currently relies on `builtins.fetchGit`. See https://github.com/NixOS/nix/issues/9292."
+    else if ! isPath path then
+      throw "lib.fileset.${function}: Expected the ${argument} to be a path, but it's a ${typeOf path} instead."
+    else if pathType path != "directory" then
+      throw "lib.fileset.${function}: Expected the ${argument} (${toString path}) to be a directory, but it's a file instead."
+    # We can identify local working directories by checking for .git,
+    # see https://git-scm.com/docs/gitrepository-layout#_description.
+    # Note that `builtins.fetchGit` _does_ work for bare repositories (where there's no `.git`),
+    # even though `git ls-files` wouldn't return any files in that case.
+    else if ! pathExists (path + "/.git") then
+      throw "lib.fileset.${function}: Expected the ${argument} (${toString path}) to point to a local working tree of a Git repository, but it's not."
+    else
+      _mirrorStorePath path fetchResult.outPath;
+
 }

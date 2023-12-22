@@ -25,6 +25,7 @@ outer@{ lib, stdenv, fetchurl, fetchpatch, openssl, zlib, pcre, libxml2, libxslt
 , fixPatch ? p: p
 , postPatch ? ""
 , preConfigure ? ""
+, preInstall ? ""
 , postInstall ? ""
 , meta ? null
 , nginx-doc ? outer.nginx-doc
@@ -68,6 +69,7 @@ stdenv.mkDerivation {
     ++ mapModules "inputs";
 
   configureFlags = [
+    "--sbin-path=bin/nginx"
     "--with-http_ssl_module"
     "--with-http_v2_module"
     "--with-http_realip_module"
@@ -124,7 +126,11 @@ stdenv.mkDerivation {
   ] ++ lib.optionals (stdenv.cc.isGNU && lib.versionAtLeast stdenv.cc.version "11") [
     # fix build vts module on gcc11
     "-Wno-error=stringop-overread"
-  ] ++ lib.optional stdenv.isDarwin "-Wno-error=deprecated-declarations");
+  ] ++ lib.optionals stdenv.isDarwin [
+    "-Wno-error=deprecated-declarations"
+    "-Wno-error=gnu-folding-constant"
+    "-Wno-error=unused-but-set-variable"
+  ]);
 
   configurePlatforms = [];
 
@@ -174,13 +180,13 @@ stdenv.mkDerivation {
     if [[ -e man/nginx.8 ]]; then
       installManPage man/nginx.8
     fi
-  '';
+  '' + preInstall;
 
   disallowedReferences = map (m: m.src) modules;
 
   postInstall =
     let
-      noSourceRefs = lib.concatMapStrings (m: "remove-references-to -t ${m.src} $out/sbin/nginx\n") modules;
+      noSourceRefs = lib.concatMapStrings (m: "remove-references-to -t ${m.src} $out/bin/nginx\n") modules;
     in noSourceRefs + postInstall;
 
   passthru = {

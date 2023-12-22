@@ -3,7 +3,7 @@
 , python3Packages
 , fetchFromGitHub
 , platformio
-, esptool_3
+, esptool
 , git
 }:
 
@@ -16,15 +16,19 @@ let
 in
 python.pkgs.buildPythonApplication rec {
   pname = "esphome";
-  version = "2023.11.2";
-  format = "setuptools";
+  version = "2023.11.6";
+  pyproject = true;
 
   src = fetchFromGitHub {
     owner = pname;
     repo = pname;
     rev = "refs/tags/${version}";
-    hash = "sha256-7VYGrWoElc/urs+jomJrRt0dzdmJhCenRvb9bHCl6H4=";
+    hash = "sha256-9LqZlhCt+7p6tnSHFhbnUzkEOJQDsg/Pd/hgd/Il0ZQ=";
   };
+
+  nativeBuildInputs = with python.pkgs; [
+    setuptools
+  ];
 
   postPatch = ''
     # remove all version pinning (E.g tornado==5.1.1 -> tornado)
@@ -57,6 +61,7 @@ python.pkgs.buildPythonApplication rec {
     protobuf
     pyparsing
     pyserial
+    python-magic
     pyyaml
     requests
     tornado
@@ -69,7 +74,7 @@ python.pkgs.buildPythonApplication rec {
     # platformio is used in esphomeyaml/platformio_api.py
     # esptool is used in esphomeyaml/__main__.py
     # git is used in esphomeyaml/writer.py
-    "--prefix PATH : ${lib.makeBinPath [ platformio esptool_3 git ]}"
+    "--prefix PATH : ${lib.makeBinPath [ platformio esptool git ]}"
     "--set ESPHOME_USE_SUBPROCESS ''"
   ];
 
@@ -106,5 +111,6 @@ python.pkgs.buildPythonApplication rec {
       gpl3Only # The python codebase and all other parts of this codebase
     ];
     maintainers = with maintainers; [ globin hexa ];
+    mainProgram = "esphome";
   };
 }
