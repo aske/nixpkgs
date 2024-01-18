@@ -821,7 +821,8 @@ stdenv.mkDerivation (finalAttrs: {
   ;
 
   buildFlags = [ "all" ]
-    ++ optional buildQtFaststart "tools/qt-faststart"; # Build qt-faststart executable
+    ++ optional buildQtFaststart "tools/qt-faststart" # Build qt-faststart executable
+    ++ optional withZmq "tools/zmqsend"; # Build zmqsend executable
 
   doCheck = stdenv.hostPlatform == stdenv.buildPlatform;
 
@@ -852,6 +853,7 @@ stdenv.mkDerivation (finalAttrs: {
 
   postInstall = optionalString buildQtFaststart ''
     install -D tools/qt-faststart -t $bin/bin
+    install -D tools/zmqsend -t $bin/bin
   '';
 
   # Set RUNPATH so that libnvcuvid and libcuda in /run/opengl-driver(-32)/lib can be found.
