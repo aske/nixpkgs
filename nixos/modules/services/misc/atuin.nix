@@ -81,6 +81,7 @@ in
         ensureDBOwnership = true;
       }];
       ensureDatabases = [ "atuin" ];
+      package = pkgs.postgresql_16;
     };
 
     systemd.services.atuin = {
