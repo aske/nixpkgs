@@ -54,6 +54,18 @@
     patches = lib.importJSON ./hardened/patches.json;
   in lib.mapAttrs mkPatch patches;
 
+  intel-pstate1 =
+    {
+      name = "intel-pstate";
+      patch = ./20240606_srinivas_pandruvada_cpufreq_intel_pstate_update_meteor_lake_epps.mbx;
+    };
+
+  intel-pstate2 =
+    {
+      name = "intel-pstate";
+      patch = ./20240606_srinivas_pandruvada_cpufreq_intel_pstate_update_arrow_lake_epps.mbx;
+    };
+
   # Adapted for Linux 5.4 from:
   # https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=04896832c94aae4842100cafb8d3a73e1bed3a45
   rtl8761b_support =
