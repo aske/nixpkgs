@@ -1,12 +1,12 @@
 # DO NOT EDIT! This file is generated automatically by update.sh
 { }:
 {
-  version = "3.134.1";
+  version = "3.136.1";
   pulumiPkgs = {
     x86_64-linux = [
       {
-        url = "https://get.pulumi.com/releases/sdk/pulumi-v3.134.1-linux-x64.tar.gz";
-        sha256 = "04f9pdfq4s0zyvmm84jkj4rrhvinjfcl7ndnwqxi343wk6mr55m1";
+        url = "https://get.pulumi.com/releases/sdk/pulumi-v3.136.1-linux-x64.tar.gz";
+        sha256 = "sha256-vCmtMlwEQ58q8nMPU56L2+c9qA5gnkTmqSQsVlHxLzE=";
       }
       {
         url = "https://api.pulumi.com/releases/plugins/pulumi-resource-aiven-v6.24.1-linux-amd64.tar.gz";
@@ -17,8 +17,8 @@
         sha256 = "0xhscn5nblmy3z4jnb3wrmg60cf68kx046vr2nicdvflf5bampf0";
       }
       {
-        url = "https://api.pulumi.com/releases/plugins/pulumi-resource-alicloud-v3.62.1-linux-amd64.tar.gz";
-        sha256 = "1pq2xl59ady3id356gxp08ml7jdlzk4hm0rlq6dk9cn7v9nvj973";
+        url = "https://api.pulumi.com/releases/plugins/pulumi-resource-alicloud-v3.63.0-linux-amd64.tar.gz";
+        sha256 = "sha256-rgk/Ml561DMCOGXWfwsVZqdnAsG+OJ2yO+rXoSWHMzo=";
       }
       {
         url = "https://api.pulumi.com/releases/plugins/pulumi-resource-artifactory-v8.0.1-linux-amd64.tar.gz";
